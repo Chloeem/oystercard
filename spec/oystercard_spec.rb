@@ -13,14 +13,6 @@ describe Oystercard do
     end
   end
 
-  describe '#deduct' do
-    
-    it 'should deduct money' do
-      subject.top_up(20)
-      expect { subject.deduct(10) }.to change { subject.balance }.by(-10)
-    end
-  end
-
   describe '#touch_in' do
     it 'is initially not in a journey' do
       expect(subject.in_journey).to eq(false)
@@ -41,6 +33,12 @@ describe Oystercard do
       subject.top_up(1)
       subject.touch_in
       expect(subject.touch_out).to eq(false)
+    end
+
+    it 'should deduce money when touching out' do
+      subject.top_up(1)
+      subject.touch_in
+      expect { subject.touch_out }.to change { subject.balance }.by(-Oystercard::MINIMUM_BALANCE)
     end
   end
 end
